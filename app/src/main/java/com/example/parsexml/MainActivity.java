@@ -9,9 +9,13 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private TextView txt;
@@ -27,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void parseXML() {
+
         XmlPullParserFactory parserFactory;
         try {
             parserFactory = XmlPullParserFactory.newInstance();
@@ -84,5 +89,32 @@ public class MainActivity extends AppCompatActivity {
         }
 
         txt.setText(builder.toString());
+    }
+
+    private List<Users> list = new ArrayList<>();
+    private void readTXT(){
+
+        InputStream i = getResources().openRawResource(R.raw.data);
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(i, Charset.forName("UTF-8")));
+
+        String line;
+
+        try{
+
+            while((line = reader.readLine()) != null){
+
+                String [] attributes = line.split(";");
+                Users user = new Users();
+                user.setId(attributes[0]);
+                user.setName(attributes[1]);
+                user.setSurname(attributes[2]);
+                list.add(user);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
